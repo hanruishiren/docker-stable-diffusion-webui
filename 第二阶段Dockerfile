@@ -1,0 +1,7 @@
+FROM rryha/sdwebui-totallynew:20231120-stage1 as minimal
+
+RUN cd /app/stable-diffusion-webui && \
+    touch install.log && \
+    timeout 2h bash -c "./webui.sh --skip-torch-cuda-test --no-download-sd-model --exit"
+
+FROM minimal as full

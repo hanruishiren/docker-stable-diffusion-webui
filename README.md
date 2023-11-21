@@ -1,3 +1,47 @@
+# Harry的提示：
+要生成一个Docker镜像，你需要使用`docker build`命令，该命令的基本语法如下：
+
+```bash
+docker build -t <镜像名称>:<标签> <路径>
+```
+
+其中：
+- `<镜像名称>` 是你想要给镜像起的名称。
+- `<标签>` 是你想要给镜像打的标签，通常是版本号或者其他标识。
+- `<路径>` 是包含 Dockerfile 的目录路径。
+
+例如，如果你的Dockerfile在当前目录下，你可以运行如下命令：
+
+```bash
+docker build -t myimage:1.0 .
+```
+
+这个命令会在当前目录下查找Dockerfile，并使用它构建一个名为`myimage`，标签为`1.0`的Docker镜像。
+
+生成的镜像默认是存储在本地的 Docker 主机上。如果你想要将镜像推送到 Docker Hub 或其他容器注册表，你需要使用 `docker push` 命令。首先，你需要登录到 Docker Hub，然后运行以下命令：
+
+```bash
+docker login
+```
+
+然后，使用以下命令将镜像推送到 Docker Hub：
+
+```bash
+docker push <镜像名称>:<标签>
+```
+
+例如：
+
+```bash
+docker push myimage:1.0
+```
+
+这样就会将 `myimage` 镜像的 `1.0` 版本推送到 Docker Hub。确保你有相应的权限来推送到指定的容器注册表。
+
+---
+# 原文readme如下：
+
+
 # Stable Diffusion web UI
 A browser interface based on Gradio library for Stable Diffusion.
 

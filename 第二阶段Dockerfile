@@ -1,4 +1,4 @@
-FROM rryha/sdwebui-totallynew:20231120-stage1 as minimal
+FROM sdwebui:stage1 as minimal
 
 RUN cd /app/stable-diffusion-webui && \
     touch install.log && \

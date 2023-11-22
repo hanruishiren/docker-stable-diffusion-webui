@@ -1,0 +1,14 @@
+FROM sdwebui:stage2 as minimal
+
+
+# 克隆 Git 仓库
+RUN git clone https://github.com/hanruishiren/sd_dreambooth_extension.git /app/stable-diffusion-webui/extensions/sd_dreambooth_extension
+RUN git clone https://github.com/camenduru/sd-civitai-browser /app/stable-diffusion-webui/extensions/sd-civitai-browser
+RUN git clone https://github.com/Mikubill/sd-webui-controlnet /app/stable-diffusion-webui/extensions/sd-webui-controlnet
+
+
+RUN cd /app/stable-diffusion-webui && \
+    touch install.log && \
+    timeout 2h bash -c "./webui.sh --listen --share --xformers --enable-insecure-extension-access --skip-torch-cuda-test --no-download-sd-model --exit"
+
+FROM minimal as full

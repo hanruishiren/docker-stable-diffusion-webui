@@ -1,0 +1,17 @@
+FROM rryha/sdwebui-totallynew:20231126-cuda11.7.1-root-conda-ubuntu22.04-stage2 as minimal
+
+USER sduser
+
+# 克隆 Git 仓库
+RUN git clone -b 1.0.14 https://github.com/d8ahazard/sd_dreambooth_extension /app/stable-diffusion-webui/extensions/sd_dreambooth_extension
+RUN git clone https://github.com/camenduru/sd-civitai-browser /app/stable-diffusion-webui/extensions/sd-civitai-browser
+RUN git clone https://github.com/Mikubill/sd-webui-controlnet /app/stable-diffusion-webui/extensions/sd-webui-controlnet
+
+
+RUN cd /app/stable-diffusion-webui && \
+    touch install.log && \
+    timeout 2h bash -c "./webui.sh --listen --share --xformers --enable-insecure-extension-access --skip-torch-cuda-test --no-download-sd-model --exit"
+
+USER root
+
+FROM minimal as full

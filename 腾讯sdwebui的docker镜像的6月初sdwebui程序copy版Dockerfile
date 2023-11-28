@@ -1,0 +1,25 @@
+FROM nvidia/cuda:11.0.3-cudnn8-devel-ubuntu18.04 as minimal
+# 需要复制的sdwebui+dreambooth+controlnet程序，源自腾讯制作的sdwebiu的docker镜像：gpulab.tencentcloudcr.com/ai/stable-diffusion:1.0.8  或者 rryha/from-tencent:1.0.8
+# 启动方式：source /dockerx/stable-diffusion-webui/venv/bin/activate  然后 cd /dockerx/stable-diffusion-webui 再然后 python3 launch.py --share --xformers --enable-insecure-extension-access --api
+# 暂时无法采用service_start.sh的方式来启动，原因没空去研究。先凑合用吧！
+
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update && apt-get install -y python3.8 python3.8-dev python3.8-venv python3.8-distutils wget git ffmpeg libsm6 libxext6 vim
+RUN rm /usr/bin/python3  && \
+    ln -s /usr/bin/python3.8 /usr/bin/python  && \
+    ln -s /usr/bin/python3.8 /usr/bin/python3 
+RUN wget https://bootstrap.pypa.io/get-pip.py && \
+    python3 get-pip.py 
+ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64
+ENV CUDA_HOME=/usr/local/cuda
+RUN [ -e /dockerx ] || mkdir -p /dockerx 
+
+COPY dockerx /dockerx
+
+RUN mkdir -p /root/.jupyter/
+RUN echo "c.NotebookApp.ip = '*'\nc.NotebookApp.notebook_dir = '/dockerx/stable-diffusion-webui/'\nc.NotebookApp.open_browser = False\n" >> /root/.jupyter/jupyter_notebook_config.py 
+
+FROM minimal as full
